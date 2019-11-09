@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8"/>
+		<title></title>
+		<link rel="icon" href="img/favicon.ico">
+
+		<!--Dependencies-->
+		<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+		<script src="js/jquery.csv.min.js"></script>
+		<script src="js/utility.js"></script>
+		
+		<link rel="stylesheet" href="css/index.css">
+			
+	</head>
+	<body>
+	<div class='site-wrapper'>
+	<article>
+	<h1>Emotsioonid Eesti meediamaastikul poliitika lõikes</h1>
+	<p>Siin artiklis on ülevaade Eesti meediamaastikust poliikute ja erakondade lõikes kajastuse positiivsuse järgi, kus igal graafikul ja tabelis vastab 1 positiivsele kajastusel, -1 negatiivsele kajastusele ja 0 neutraalsele kajastusele.</p>
+	<p>Kajastuse positiivsus on leitud modifitseeritud <a href="https://towardsdatascience.com/bert-explained-state-of-the-art-language-model-for-nlp-f8b21a9b6270">BERTi mudeliga</a>, mille treeningandmestik on kokku pandud kolmest erinevast andmestikust: </p>
+	<ul>
+		<li><a href="http://peeter.eki.ee:5000/valence/paragraphsquery">EKI valentsikorpus, n = 4300</a></li>
+		<li>Eestikeelsed raamatute hinnangud, n = 20000</li>
+		<li>Internetist kogutud solvangute ja komplimentide listid, n = 1000</li>
+	</ul>
+
+	<p>Mudeli täpsus on 84%, s.t. et 84% mudeli määratud kategooriatest on õigesti määratud. Skoor on saadud testandmestikust, mida ei ole treenimisel kasutatud. Testandmestiku suurus on 10% koguandmestikust. Mudel määratleb korrektselt negatiivseid ja positiivseid tekste, kuid satub kohati hätta neutraalsetega, mistõttu on neutraalsete tekstide skoor 77%</p>
+	<img src="img/score.png">
+
+	<p><b>NB! See leht ja siinsed andmed on varajases arendamisjärgus, mistõttu on vale hetkel saadaolevast informatsioonist lõplikke järeldusi teha.</b></p>
+
+	<h2>Poliitikud</h2>
+	<p>Siinsetes graafikutes on kasutatud artikleid, milles on 3 või rohkem lõiku. Poliitikute graafikud on järjestatud artiklite hulga järgi.</p>
+	<ul>
+		<li>Valge = ERR</li>
+		<li>Kollane = Delfi</li>
+		<li>Sinine = Postimees</li>
+	</ul>
+
+	<h3>Uudislood</h3>
+	
+	
+	<h3>Arvamusartiklid</h3>
+	
+
+
+	
+	<script type="text/javascript">
+		var requests = [];
+
+		console.log("Data: Fetching...");
+
+		
+		var graphCounter = 0;
+
+		/*requests.push(function(){
+		return $.ajax({
+			type: "GET",
+			url: "./data/Maailmavaade korrelatsioonid.csv",
+			dataType: "text",
+			context: {
+				name: 'Maailmavaade korrelatsioonid',
+			},
+			success: function(data){
+				console.log("Data: CSV: " + this.name);
+				
+				CSV_CORR = $.csv.toObjects(data);
+			}
+		})
+		});*/
+        
+	  	$("#loadingSpinner").hide();
+
+		$.when(...requests.map(req => req())).done(function(){
+			$("#loadingSpinner").hide();
+			$("graphs").empty();
+
+			console.log("Data: Fetched!");
+			console.log("");
+
+
+		});
+
+	</script>
+	
+	<img src="img/jüri_ratas.svg">
+	<div id="graphs"></div>
+
+	<div style='display:none' id="loadingSpinner">
+		<img src="img/spinner.gif">
+		<h2 id="loadingText">Laen andmeid</h2>
+	</div>
+	
+	<br/>
+	<i><a href="https://www.facebook.com/Jaak.Kivi">Jaak Kivi</a></i>
+	</article>
+	</div>
+	</body>
+</html>
