@@ -13,6 +13,9 @@
 		<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
 		<script src="js/jquery.csv.min.js"></script>
+
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
 		<script src="js/utility.js"></script>
 		
 		<link rel="stylesheet" href="css/index.css">
@@ -23,16 +26,47 @@
 	<article>
 	<h1>Emotsioonid Eesti meediamaastikul poliitika lõikes</h1>
 	<p>Loon siia lühikese ülevaate Eesti meediamaastikust poliikute ja erakondade lõikes kajastuse positiivsuse järgi, kus igal graafikul ja tabelis vastab 1 positiivsele kajastusele, -1 negatiivsele kajastusele ja 0 neutraalsele kajastusele.</p>
-	<p>Kajastuse positiivsus on leitud modifitseeritud <a href="https://towardsdatascience.com/bert-explained-state-of-the-art-language-model-for-nlp-f8b21a9b6270">BERTi mudeliga</a>, mille treeningandmestik on kokku pandud kolmest erinevast andmestikust: </p>
+	
+	<p>Hinnatavas andmestikus on 261 000 artiklit järgnevatelt väljaannetelt:</p>
+	<ul>
+		<li>Postimees: 129 805 artiklit</li>
+		<li>Delfi: 66 091 artiklit</li>
+		<li>ERR: 57 235 artiklit</li>
+		<li>Õhtuleht: 30 749 artiklit</li>
+		<li>Uued Uudised: 8 548 artiklit</li>
+	</ul>
+
+	<h2>Metoodikast</h2>
+	<h3>1. Teksti hindamine</h3>
+	<p>Teksti positiivsus on leitud modifitseeritud <a href="https://towardsdatascience.com/bert-explained-state-of-the-art-language-model-for-nlp-f8b21a9b6270">BERTi mudeliga</a>, mille treeningandmestik on kokku pandud kolmest erinevast andmestikust: </p>
 	<ul>
 		<li><a href="http://peeter.eki.ee:5000/valence/paragraphsquery">EKI valentsikorpus, n = 4300</a></li>
 		<li>Eestikeelsed raamatute hinnangud, n = 20000</li>
 		<li>Internetist kogutud solvangute ja komplimentide listid, n = 1000</li>
 	</ul>
+	<p>Teksti positiivsus määratakse lõigu tasandil, kuid iga lõigu puhul saab mudel kaasa ka eelmise ja järgmise lõigu. Juhul kui eelmist või järgmist lõiku ei eksisteeri sest mudel hindab esimest või viimast lõiku, siis saadetakse mudelisse vaid 2 lõiku.</p>
 
-	<p>Mudeli täpsus on 84%, s.t. et 84% mudeli määratud kategooriatest on õigesti määratud. Skoor on saadud testandmestikust, mida ei ole treenimisel kasutatud. Testandmestiku suurus on 10% koguandmestikust. Mudel määratleb korrektselt negatiivseid ja positiivseid tekste, kuid satub kohati hätta neutraalsetega, mistõttu on neutraalsete tekstide skoor 77%</p>
+	<p>Mudeli täpsus on 84%, ehk 84% mudeli määratud kategooriatest on õigesti määratud. Skoor on saadud testandmestikust, mida ei ole treenimisel kasutatud. Testandmestiku suurus on 10% koguandmestikust. Mudel määratleb korrektselt negatiivseid ja positiivseid tekste, kuid satub kohati hätta neutraalsetega, mistõttu on neutraalsete tekstide skoor 77%. Peamiseks põhjuseks on väike neutraalne andmestik.</p>
 	<img src="img/score.png">
 
+	<h3>2. Võtmesõnade hindamine</h3>
+	<p>Teiseks sammuks on artiklis isikute ja erakondade hindamine artiklis juba määratud lõigu emotsiooniväärtuste põhjal. Selleks leitakse artikli lõikude väärtuste kaalutud keskmine, milles kaal on defineeritud järgnevalt:</p>
+	<p>
+		$$
+		w=\frac{1}{1+d/L}\cdot\frac{L}{l}
+		$$
+		$$
+		\begin{array}{l l}
+		\text{$w$ on lõigu kaal} & \text{$l$ on praeguse lõigu pikkus} \\ 
+		\text{$d$ on lõigu kaugus võtmesõnaga lõigust} & \text{$L$ on keskmise lõigu pikkus} \\ 
+		\end{array}
+		$$
+	</p>
+	<p>Keskmine lõigu pikkus on leitud kõikide andmestiku artiklite põhjal. Valemi esimene pool määrab lõigu kaaluks pöördvõrdeliselt lõigu kauguse lähimast võtmesõnadega lõigust. Teine pool lisab kaalule veel juurde lõigu pikkuse.</p>
+
+	
+
+	<br/>
 	<p><b>NB! See leht ja siinsed andmed on varajases arendamisjärgus, mistõttu on vale hetkel saadaolevast informatsioonist lõplikke järeldusi teha.</b></p>
 
 	<h2>Poliitikud</h2>
@@ -98,7 +132,7 @@
 	<img src="img/uudislood/Helmen Kütt.png">
 	<img src="img/uudislood/Peeter Ernits.png">
 	
-	
+	<!--
 	<h3>Arvamusartiklid</h3>
 	<img src="img/arvamus/Jüri Ratas.png">
 	<img src="img/arvamus/Taavi Rõivas.png">
@@ -123,7 +157,7 @@
 	<img src="img/arvamus/Marko Mihkelson.png">
 	<img src="img/arvamus/Indrek Saar.png">
 	
-	
+	-->
 
 
 	
